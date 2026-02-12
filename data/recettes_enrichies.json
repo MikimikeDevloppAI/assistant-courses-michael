@@ -1,0 +1,317 @@
+{
+  "recettes_base": {
+    "riz_saute": {
+      "nom": "Riz Sauté aux Légumes",
+      "difficulte": "facile",
+      "temps_prep": 15,
+      "portions": 4,
+      "type": "gestion_restes",
+      "cuisine": "asiatique",
+      "ingredients": ["riz cuit", "légumes variés", "œufs", "sauce soja", "huile sésame"],
+      "tags": ["rapide", "restes", "asiatique"],
+      "score_base": 10
+    },
+    "brocolis_vapeur": {
+      "nom": "Brocolis à la Vapeur",
+      "difficulte": "facile", 
+      "temps_prep": 10,
+      "portions": 4,
+      "type": "accompagnement",
+      "cuisine": "french",
+      "ingredients": ["brocolis", "beurre", "sel", "poivre"],
+      "tags": ["sain", "rapide", "vapeur"],
+      "score_base": 8
+    },
+    "poulet_marine": {
+      "nom": "Filets de Poulet Marinés",
+      "difficulte": "moyen",
+      "temps_prep": 25,
+      "portions": 4,
+      "type": "plat_principal",
+      "cuisine": "french",
+      "ingredients": ["filets poulet", "huile olive", "herbes provence", "ail", "citron"],
+      "tags": ["proteine", "marine", "mediterraneen"],
+      "score_base": 8
+    },
+    "fajitas": {
+      "nom": "Fajitas au Poulet",
+      "difficulte": "moyen",
+      "temps_prep": 30,
+      "portions": 4,
+      "type": "plat_complet",
+      "cuisine": "fusion",
+      "ingredients": ["tortillas", "poulet", "poivrons", "oignons", "épices mexicaines"],
+      "tags": ["mexicain", "convivial", "complet"],
+      "score_base": 7
+    },
+    "chili_con_carne": {
+      "nom": "Chili con Carne",
+      "difficulte": "moyen",
+      "temps_prep": 45,
+      "portions": 6,
+      "type": "plat_mijote",
+      "cuisine": "fusion",
+      "ingredients": ["bœuf haché", "haricots rouges", "tomates", "oignons", "épices"],
+      "tags": ["mijote", "épicé", "consistant"],
+      "score_base": 6
+    },
+    "bolognese": {
+      "nom": "Sauce Bolognese",
+      "difficulte": "moyen",
+      "temps_prep": 60,
+      "portions": 6,
+      "type": "sauce",
+      "cuisine": "italian",
+      "ingredients": ["bœuf haché", "tomates", "oignons", "carottes", "pâtes"],
+      "tags": ["italien", "mijote", "pates"],
+      "score_base": 7
+    },
+    "boeuf_bourguignon": {
+      "nom": "Bœuf Bourguignon",
+      "difficulte": "difficile",
+      "temps_prep": 180,
+      "portions": 6,
+      "type": "plat_weekend",
+      "cuisine": "french",
+      "ingredients": ["bœuf bourguignon", "vin rouge", "champignons", "lardons", "oignons"],
+      "tags": ["weekend", "mijote", "festif"],
+      "score_base": 5
+    }
+  },
+  
+  "banque_recettes": {
+    "pates_carbonara": {
+      "nom": "Pâtes Carbonara",
+      "difficulte": "moyen",
+      "temps_prep": 20,
+      "portions": 4,
+      "type": "plat_principal", 
+      "cuisine": "italian",
+      "ingredients": ["pâtes", "lardons", "œufs", "parmesan", "crème"],
+      "tags": ["italien", "crémeux", "rapide"],
+      "score_base": 0
+    },
+    "salade_cesar": {
+      "nom": "Salade César",
+      "difficulte": "facile",
+      "temps_prep": 15,
+      "portions": 4,
+      "type": "entrée",
+      "cuisine": "fusion",
+      "ingredients": ["salade romaine", "poulet", "croûtons", "parmesan", "sauce césar"],
+      "tags": ["salade", "frais", "proteine"],
+      "score_base": 0
+    },
+    "risotto_champignons": {
+      "nom": "Risotto aux Champignons",
+      "difficulte": "moyen",
+      "temps_prep": 35,
+      "portions": 4,
+      "type": "plat_principal",
+      "cuisine": "italian",
+      "ingredients": ["riz arborio", "champignons", "bouillon", "vin blanc", "parmesan"],
+      "tags": ["italien", "crémeux", "champignons"],
+      "score_base": 0
+    },
+    "saumon_grille": {
+      "nom": "Saumon Grillé aux Légumes",
+      "difficulte": "moyen",
+      "temps_prep": 25,
+      "portions": 4,
+      "type": "plat_principal",
+      "cuisine": "french", 
+      "ingredients": ["saumon", "courgettes", "tomates", "herbes", "huile olive"],
+      "tags": ["poisson", "grillé", "sain"],
+      "score_base": 0
+    },
+    "quiche_lorraine": {
+      "nom": "Quiche Lorraine",
+      "difficulte": "moyen",
+      "temps_prep": 45,
+      "portions": 6,
+      "type": "plat_complet",
+      "cuisine": "french",
+      "ingredients": ["pâte brisée", "lardons", "œufs", "crème", "fromage"],
+      "tags": ["français", "traditionnel", "œufs"],
+      "score_base": 0
+    },
+    "curry_poulet": {
+      "nom": "Curry de Poulet",
+      "difficulte": "moyen",
+      "temps_prep": 30,
+      "portions": 4,
+      "type": "plat_principal",
+      "cuisine": "fusion",
+      "ingredients": ["poulet", "lait coco", "curry", "oignons", "riz"],
+      "tags": ["épicé", "exotique", "crémeux"],
+      "score_base": 0
+    },
+    "ratatouille": {
+      "nom": "Ratatouille Provençale",
+      "difficulte": "facile",
+      "temps_prep": 40,
+      "portions": 6,
+      "type": "accompagnement",
+      "cuisine": "french",
+      "ingredients": ["aubergines", "courgettes", "tomates", "poivrons", "herbes"],
+      "tags": ["légumes", "provençal", "mijote"],
+      "score_base": 0
+    },
+    "tacos_boeuf": {
+      "nom": "Tacos au Bœuf",
+      "difficulte": "facile",
+      "temps_prep": 20,
+      "portions": 4,
+      "type": "plat_complet",
+      "cuisine": "fusion",
+      "ingredients": ["tortillas", "bœuf haché", "salade", "tomates", "fromage"],
+      "tags": ["mexicain", "rapide", "convivial"],
+      "score_base": 0
+    },
+    "gratin_dauphinois": {
+      "nom": "Gratin Dauphinois",
+      "difficulte": "moyen",
+      "temps_prep": 60,
+      "portions": 6,
+      "type": "accompagnement",
+      "cuisine": "french",
+      "ingredients": ["pommes terre", "crème", "lait", "fromage", "ail"],
+      "tags": ["français", "gratin", "réconfortant"],
+      "score_base": 0
+    },
+    "soupe_tomates": {
+      "nom": "Soupe de Tomates",
+      "difficulte": "facile",
+      "temps_prep": 25,
+      "portions": 4,
+      "type": "entrée",
+      "cuisine": "french",
+      "ingredients": ["tomates", "oignons", "bouillon", "basilic", "crème"],
+      "tags": ["soupe", "réconfortant", "facile"],
+      "score_base": 0
+    },
+    "pizza_margherita": {
+      "nom": "Pizza Margherita",
+      "difficulte": "moyen",
+      "temps_prep": 30,
+      "portions": 4,
+      "type": "plat_complet",
+      "cuisine": "italian",
+      "ingredients": ["pâte pizza", "sauce tomate", "mozzarella", "basilic"],
+      "tags": ["italien", "pizza", "convivial"],
+      "score_base": 0
+    },
+    "saute_porc": {
+      "nom": "Sauté de Porc aux Légumes",
+      "difficulte": "moyen",
+      "temps_prep": 35,
+      "portions": 4,
+      "type": "plat_principal",
+      "cuisine": "french",
+      "ingredients": ["porc", "carottes", "pommes terre", "petits pois", "bouillon"],
+      "tags": ["porc", "légumes", "mijote"],
+      "score_base": 0
+    },
+    "salade_quinoa": {
+      "nom": "Salade de Quinoa",
+      "difficulte": "facile",
+      "temps_prep": 20,
+      "portions": 4,
+      "type": "plat_complet",
+      "cuisine": "fusion",
+      "ingredients": ["quinoa", "légumes", "feta", "tomates", "concombre"],
+      "tags": ["sain", "végétarien", "frais"],
+      "score_base": 0
+    },
+    "lasagnes": {
+      "nom": "Lasagnes à la Bolognese",
+      "difficulte": "difficile",
+      "temps_prep": 90,
+      "portions": 8,
+      "type": "plat_complet",
+      "cuisine": "italian",
+      "ingredients": ["pâtes lasagnes", "bolognese", "béchamel", "mozzarella"],
+      "tags": ["italien", "festif", "gratin"],
+      "score_base": 0
+    },
+    "poisson_papillote": {
+      "nom": "Poisson en Papillote",
+      "difficulte": "facile",
+      "temps_prep": 25,
+      "portions": 4,
+      "type": "plat_principal",
+      "cuisine": "french",
+      "ingredients": ["poisson blanc", "légumes", "herbes", "citron", "huile"],
+      "tags": ["poisson", "vapeur", "sain"],
+      "score_base": 0
+    },
+    "couscous_vegetarien": {
+      "nom": "Couscous Végétarien",
+      "difficulte": "moyen",
+      "temps_prep": 40,
+      "portions": 6,
+      "type": "plat_complet",
+      "cuisine": "fusion",
+      "ingredients": ["couscous", "légumes", "pois chiches", "bouillon", "épices"],
+      "tags": ["végétarien", "épicé", "complet"],
+      "score_base": 0
+    },
+    "croque_monsieur": {
+      "nom": "Croque-Monsieur",
+      "difficulte": "facile",
+      "temps_prep": 15,
+      "portions": 2,
+      "type": "plat_rapide",
+      "cuisine": "french",
+      "ingredients": ["pain", "jambon", "fromage", "béchamel"],
+      "tags": ["français", "rapide", "gratiné"],
+      "score_base": 0
+    },
+    "escalope_milanaise": {
+      "nom": "Escalope Milanaise",
+      "difficulte": "moyen",
+      "temps_prep": 20,
+      "portions": 4,
+      "type": "plat_principal",
+      "cuisine": "italian",
+      "ingredients": ["escalopes veau", "chapelure", "œufs", "parmesan"],
+      "tags": ["italien", "pané", "proteine"],
+      "score_base": 0
+    },
+    "pot_au_feu": {
+      "nom": "Pot-au-Feu",
+      "difficulte": "moyen",
+      "temps_prep": 120,
+      "portions": 6,
+      "type": "plat_weekend",
+      "cuisine": "french",
+      "ingredients": ["bœuf", "légumes racines", "bouillon", "herbes"],
+      "tags": ["français", "mijote", "traditionnel"],
+      "score_base": 0
+    },
+    "paella_valenciana": {
+      "nom": "Paella Valenciana",
+      "difficulte": "difficile",
+      "temps_prep": 50,
+      "portions": 6,
+      "type": "plat_complet",
+      "cuisine": "fusion",
+      "ingredients": ["riz", "poulet", "crevettes", "safran", "légumes"],
+      "tags": ["espagnol", "festif", "riz"],
+      "score_base": 0
+    }
+  },
+
+  "generateur_patterns": {
+    "cuisines": ["french", "italian", "fusion", "asiatique"],
+    "types": ["plat_principal", "accompagnement", "entrée", "plat_complet"],
+    "difficultes": ["facile", "moyen", "difficile"],
+    "temps": [15, 20, 25, 30, 35, 40, 45, 60, 90],
+    "ingredients_base": {
+      "proteines": ["poulet", "bœuf", "porc", "poisson", "œufs"],
+      "feculents": ["riz", "pâtes", "pommes terre", "quinoa"],
+      "legumes": ["courgettes", "brocolis", "carottes", "oignons", "tomates"],
+      "condiments": ["herbes", "épices", "ail", "citron"]
+    }
+  }
+}

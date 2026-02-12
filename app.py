@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Assistant Courses Michael - Application Flask avec IA personnalisée
+Version enrichie avec génération IA de nouvelles recettes
 """
 
 from flask import Flask, render_template, request, jsonify
@@ -10,6 +11,7 @@ import random
 from datetime import datetime, timedelta
 from collections import defaultdict, Counter
 import os
+from generateur_recettes import GenerateurRecettes
 
 app = Flask(__name__)
 
@@ -22,6 +24,8 @@ class AssistantCourses:
     def __init__(self):
         self.recettes = self.charger_recettes()
         self.produits = self.charger_produits()
+        self.charger_base_enrichie()  # Charger avant init DB
+        self.generateur = GenerateurRecettes(DB_PATH)
         self.init_database()
         
     def charger_recettes(self):
@@ -31,6 +35,22 @@ class AssistantCourses:
     def charger_produits(self):
         with open(PRODUITS_PATH, 'r', encoding='utf-8') as f:
             return json.load(f)
+            
+    def charger_base_enrichie(self):
+        """Charge la base de recettes enrichie"""
+        try:
+            with open('data/recettes_enrichies.json', 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                self.recettes_enrichies = data
+                # Fusionner avec les recettes de base
+                all_recettes = {}
+                all_recettes.update(data.get('recettes_base', {}))
+                all_recettes.update(data.get('banque_recettes', {}))
+                self.toutes_recettes = all_recettes
+        except FileNotFoundError:
+            print("⚠️ Fichier recettes enrichies non trouvé, utilisation base standard")
+            self.recettes_enrichies = {}
+            self.toutes_recettes = self.recettes.get('recettes_recurrentes', {})
             
     def init_database(self):
         """Initialise la base de données SQLite pour l'apprentissage"""
@@ -94,27 +114,39 @@ class AssistantCourses:
         self.initialiser_preferences()
     
     def initialiser_preferences(self):
-        """Initialise les préférences avec les recettes de base de Michael"""
+        """Initialise les préférences avec toutes les recettes disponibles"""
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         
-        for recette_id, recette_data in self.recettes['recettes_recurrentes'].items():
-            # Vérifier si déjà en DB
+        # 1. Recettes de base (favoris Michael)
+        for recette_id, recette_data in self.recettes.get('recettes_recurrentes', {}).items():
             cursor.execute('SELECT id FROM preferences_recettes WHERE recette_id = ?', (recette_id,))
             if not cursor.fetchone():
-                # Initialiser selon la fréquence connue
+                # Score élevé pour les favoris
                 frequence_map = {
                     'tres_frequent': 10,
-                    'frequent': 7,
-                    'occasionnel': 3,
-                    'weekend': 2
+                    'frequent': 8,
+                    'occasionnel': 6,
+                    'weekend': 5
                 }
-                freq_init = frequence_map.get(recette_data.get('frequence', 'occasionnel'), 5)
+                freq_init = frequence_map.get(recette_data.get('frequence', 'frequent'), 7)
                 
                 cursor.execute('''
                     INSERT INTO preferences_recettes (recette_id, choisi, frequence_reelle)
                     VALUES (?, ?, ?)
                 ''', (recette_id, freq_init, freq_init))
+        
+        # 2. Recettes enrichies (base + banque)
+        for recette_id, recette_data in self.toutes_recettes.items():
+            cursor.execute('SELECT id FROM preferences_recettes WHERE recette_id = ?', (recette_id,))
+            if not cursor.fetchone():
+                # Score selon la pertinence estimée
+                score_base = recette_data.get('score_base', 5)
+                
+                cursor.execute('''
+                    INSERT INTO preferences_recettes (recette_id, choisi, frequence_reelle)
+                    VALUES (?, 0, ?)
+                ''', (recette_id, score_base))
         
         conn.commit()
         conn.close()
@@ -140,7 +172,7 @@ class AssistantCourses:
         
         return preferences
     
-    def suggerer_recettes(self, nombre=5):
+    def suggerer_recettes(self, nombre=6, forcer_nouvelles=False):
         """Suggère des recettes basées sur les habitudes et l'apprentissage"""
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
@@ -159,8 +191,9 @@ class AssistantCourses:
         suggestions = []
         recettes_scores = {}
         
-        for recette_id, recette_data in self.recettes['recettes_recurrentes'].items():
-            score = 0
+        # 1. SCORING DES RECETTES EXISTANTES (BASE + BANQUE)
+        for recette_id, recette_data in self.toutes_recettes.items():
+            score = recette_data.get('score_base', 5)  # Score de base
             
             # Score basé sur les préférences historiques
             pref = next((p for p in preferences_data if p[0] == recette_id), None)
@@ -175,6 +208,8 @@ class AssistantCourses:
                     score += min(jours_depuis / 7, 3)  # Max 3 points bonus après 3 semaines
                 else:
                     score += 2  # Bonus pour nouveauté
+            else:
+                score += 1  # Petit bonus pour recettes jamais essayées
             
             # Score basé sur les habitudes temporelles
             if recette_data.get('type') in habitudes.get('type_preferred', []):
@@ -183,36 +218,104 @@ class AssistantCourses:
             if recette_data.get('temps_prep', 30) <= habitudes.get('temps_autorise', 30):
                 score += 2
             
-            # Bonus pour recettes adaptées enfants en semaine
-            if habitudes.get('enfants_priorite') and recette_id in self.recettes['categories'].get('plats_enfants', []):
-                score += 2
+            # Bonus cuisine préférée
+            if recette_data.get('cuisine') in ['french', 'italian', 'fusion']:
+                score += 1
             
-            # Variété : éviter de suggérer toujours les mêmes types
-            type_recette = recette_data.get('type', 'autre')
-            if len([s for s in suggestions if self.recettes['recettes_recurrentes'][s]['type'] == type_recette]) < 2:
+            # Bonus pour recettes adaptées famille
+            if recette_data.get('difficulte') in ['facile', 'moyen']:
                 score += 1
             
             recettes_scores[recette_id] = score
         
-        # Sélectionner les meilleures avec un peu d'aléatoire
+        # 2. AJOUTER RECETTES GÉNÉRÉES IA SI DEMANDÉ
+        if forcer_nouvelles or len(recettes_scores) < nombre:
+            nouvelles_recettes = self.generateur.generer_suggestions_enrichies(2)
+            for nouvelle in nouvelles_recettes:
+                if nouvelle.get('nouveau'):  # Recette générée IA
+                    recettes_scores[nouvelle['id']] = nouvelle['score_ia']
+        
+        # 3. SÉLECTION FINALE INTELLIGENTE
+        if not recettes_scores:
+            # Fallback si aucune recette
+            return self._suggestions_fallback()
+        
+        # Trier par score
         recettes_triees = sorted(recettes_scores.items(), key=lambda x: x[1], reverse=True)
         
-        # Top candidats avec pondération aléatoire
-        top_candidats = recettes_triees[:min(nombre * 2, len(recettes_triees))]
+        # Sélection avec variété
+        suggestions_finales = []
+        types_utilises = []
+        cuisines_utilisees = []
         
-        for recette_id, score in top_candidats[:nombre]:
-            recette_data = self.recettes['recettes_recurrentes'][recette_id]
-            suggestions.append({
+        for recette_id, score in recettes_triees:
+            if len(suggestions_finales) >= nombre:
+                break
+                
+            # Récupérer les données de la recette
+            recette_data = self.toutes_recettes.get(recette_id)
+            if not recette_data:
+                continue
+            
+            # Assurer la variété des types et cuisines
+            type_recette = recette_data.get('type', 'autre')
+            cuisine = recette_data.get('cuisine', 'autre')
+            
+            # Limiter répétition du même type (max 2)
+            if types_utilises.count(type_recette) >= 2:
+                continue
+            
+            # Limiter répétition de la même cuisine (max 3)
+            if cuisines_utilisees.count(cuisine) >= 3:
+                continue
+            
+            suggestions_finales.append({
                 'id': recette_id,
                 'nom': recette_data['nom'],
                 'temps_prep': recette_data['temps_prep'],
                 'difficulte': recette_data['difficulte'],
                 'portions': recette_data['portions'],
                 'tags': recette_data.get('tags', []),
-                'score_ia': round(score, 1)
+                'score_ia': round(score, 1),
+                'nouveau': recette_data.get('generee_ia', False)
             })
+            
+            types_utilises.append(type_recette)
+            cuisines_utilisees.append(cuisine)
         
-        return suggestions
+        # Si pas assez de suggestions, compléter avec le reste
+        if len(suggestions_finales) < nombre:
+            for recette_id, score in recettes_triees:
+                if len(suggestions_finales) >= nombre:
+                    break
+                if recette_id in [s['id'] for s in suggestions_finales]:
+                    continue
+                    
+                recette_data = self.toutes_recettes.get(recette_id)
+                if recette_data:
+                    suggestions_finales.append({
+                        'id': recette_id,
+                        'nom': recette_data['nom'],
+                        'temps_prep': recette_data['temps_prep'],
+                        'difficulte': recette_data['difficulte'],
+                        'portions': recette_data['portions'],
+                        'tags': recette_data.get('tags', []),
+                        'score_ia': round(score, 1)
+                    })
+        
+        return suggestions_finales
+    
+    def _suggestions_fallback(self):
+        """Suggestions de secours si base vide"""
+        return [{
+            'id': 'fallback_1',
+            'nom': 'Pâtes à la Sauce Tomate',
+            'temps_prep': 20,
+            'difficulte': 'facile',
+            'portions': 4,
+            'tags': ['italien', 'rapide', 'facile'],
+            'score_ia': 8.0
+        }]
     
     def verifier_stock(self, ingredients_requis):
         """Vérifie le stock actuel et demande ce qui manque"""
@@ -338,9 +441,46 @@ def index():
 
 @app.route('/api/suggestions')
 def get_suggestions():
-    nombre = request.args.get('nombre', 5, type=int)
-    suggestions = assistant.suggerer_recettes(nombre)
+    nombre = request.args.get('nombre', 6, type=int)
+    nouvelles = request.args.get('nouvelles', False, type=bool)
+    suggestions = assistant.suggerer_recettes(nombre, forcer_nouvelles=nouvelles)
     return jsonify(suggestions)
+
+@app.route('/api/nouvelles-recettes')
+def get_nouvelles_recettes():
+    """Génère de nouvelles recettes IA"""
+    nombre = request.args.get('nombre', 3, type=int)
+    contexte = request.args.get('contexte', '')
+    
+    nouvelles = []
+    for i in range(nombre):
+        recette = assistant.generateur.generer_recette_contextuelle(contexte)
+        recette_id = f"ia_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{i}"
+        
+        nouvelles.append({
+            'id': recette_id,
+            'nom': recette['nom'],
+            'temps_prep': recette['temps_prep'],
+            'difficulte': recette['difficulte'],
+            'portions': recette['portions'],
+            'tags': recette['tags'],
+            'score_ia': recette['score_base'],
+            'nouveau': True,
+            'contexte': recette.get('contexte_generation', '')
+        })
+    
+    return jsonify(nouvelles)
+
+@app.route('/api/enrichir-base')
+def enrichir_base():
+    """Enrichit la base avec des recettes de la banque"""
+    nombre = request.args.get('nombre', 5, type=int)
+    ajoutees = assistant.generateur.ajouter_recettes_banque(nombre)
+    return jsonify({
+        'status': 'success',
+        'recettes_ajoutees': ajoutees,
+        'message': f'{len(ajoutees)} nouvelles recettes ajoutées à ta base !'
+    })
 
 @app.route('/api/liste-courses', methods=['POST'])
 def generer_liste():
