@@ -368,6 +368,7 @@
             
             <div style="text-align: center;">
                 <button class="button" onclick="nouvelles_suggestions()">🔄 Nouvelles Suggestions</button>
+                <button class="button secondary" onclick="generer_nouvelles_ia()">🤖 Créer Recettes IA</button>
                 <button class="button" onclick="valider_choix()" disabled id="btn-valider">
                     ✅ Valider Sélection (<span id="count-selection">0</span>)
                 </button>
@@ -413,22 +414,76 @@
         });
         
         async function charger_suggestions() {
+            const container = document.getElementById('suggestions-container');
+            container.innerHTML = '<div class="loading">Chargement des suggestions personnalisées...</div>';
+            
             try {
+                console.log('🔄 Chargement suggestions...');
                 const response = await fetch('/api/suggestions?nombre=6');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const suggestions = await response.json();
+                console.log('✅ Suggestions reçues:', suggestions);
+                
+                if (!suggestions || suggestions.length === 0) {
+                    container.innerHTML = '<div style="color: orange;">😅 Aucune suggestion trouvée. <button onclick="enrichir_base_automatique()">Enrichir la base</button></div>';
+                    return;
+                }
+                
                 afficher_suggestions(suggestions);
             } catch (error) {
-                console.error('Erreur chargement suggestions:', error);
-                document.getElementById('suggestions-container').innerHTML = 
-                    '<div style="color: red;">Erreur de chargement. Rafraîchis la page.</div>';
+                console.error('❌ Erreur chargement suggestions:', error);
+                container.innerHTML = `
+                    <div style="color: red; padding: 20px; text-align: center;">
+                        <h3>⚠️ Erreur de chargement</h3>
+                        <p>Détails: ${error.message}</p>
+                        <button onclick="charger_suggestions()" style="margin: 10px;">🔄 Réessayer</button>
+                        <button onclick="enrichir_base_automatique()" style="margin: 10px;">📚 Enrichir la base</button>
+                    </div>
+                `;
+            }
+        }
+        
+        async function enrichir_base_automatique() {
+            const container = document.getElementById('suggestions-container');
+            container.innerHTML = '<div class="loading">Enrichissement de ta base de recettes...</div>';
+            
+            try {
+                const response = await fetch('/api/enrichir-base?nombre=10');
+                const result = await response.json();
+                console.log('✅ Base enrichie:', result);
+                
+                // Recharger les suggestions
+                setTimeout(() => {
+                    charger_suggestions();
+                }, 1000);
+            } catch (error) {
+                console.error('❌ Erreur enrichissement:', error);
+                container.innerHTML = '<div style="color: red;">Erreur enrichissement. Contacte support.</div>';
             }
         }
         
         function afficher_suggestions(suggestions) {
             const container = document.getElementById('suggestions-container');
+            
+            if (!suggestions || !Array.isArray(suggestions)) {
+                console.error('❌ Suggestions invalides:', suggestions);
+                container.innerHTML = '<div style="color: red;">Données invalides reçues</div>';
+                return;
+            }
+            
+            console.log('🎯 Affichage de', suggestions.length, 'suggestions');
             container.innerHTML = '';
             
-            suggestions.forEach(suggestion => {
+            suggestions.forEach((suggestion, index) => {
+                if (!suggestion) {
+                    console.warn('⚠️ Suggestion vide à l\'index', index);
+                    return;
+                }
+                
                 const card = document.createElement('div');
                 card.className = 'recette-card';
                 card.onclick = () => toggle_recette(suggestion.id, card);
@@ -439,22 +494,34 @@
                     'difficile': '😰'
                 };
                 
+                // Gestion sécurisée des données
+                const nom = suggestion.nom || 'Recette sans nom';
+                const temps = suggestion.temps_prep || 30;
+                const difficulte = suggestion.difficulte || 'moyen';
+                const portions = suggestion.portions || 4;
+                const tags = suggestion.tags || [];
+                const score = suggestion.score_ia || 0;
+                const nouveau = suggestion.nouveau ? ' 🆕' : '';
+                
                 card.innerHTML = `
-                    <div class="ia-score">IA: ${suggestion.score_ia}</div>
+                    <div class="ia-score">IA: ${score}${nouveau}</div>
                     <div class="checkmark">✓</div>
-                    <div class="recette-title">${suggestion.nom}</div>
+                    <div class="recette-title">${nom}</div>
                     <div class="recette-meta">
-                        <span>⏱️ ${suggestion.temps_prep} min</span>
-                        <span>${difficulteIcon[suggestion.difficulte]} ${suggestion.difficulte}</span>
-                        <span>👥 ${suggestion.portions} portions</span>
+                        <span>⏱️ ${temps} min</span>
+                        <span>${difficulteIcon[difficulte] || '🍽️'} ${difficulte}</span>
+                        <span>👥 ${portions} portions</span>
                     </div>
                     <div class="recette-tags">
-                        ${suggestion.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                     </div>
                 `;
                 
                 container.appendChild(card);
+                console.log('✅ Carte ajoutée:', nom);
             });
+            
+            console.log('🎉 Affichage terminé!');
         }
         
         function toggle_recette(recette_id, card) {
@@ -480,8 +547,49 @@
             document.getElementById('count-selection').textContent = '0';
             document.getElementById('btn-valider').disabled = true;
             
-            // Attendre un peu pour l'effet
-            setTimeout(charger_suggestions, 500);
+            // Enrichir la base d'abord si nécessaire
+            try {
+                await fetch('/api/enrichir-base?nombre=5');
+                console.log('✅ Base automatiquement enrichie');
+            } catch (error) {
+                console.warn('⚠️ Enrichissement automatique échoué:', error);
+            }
+            
+            // Attendre un peu pour l'effet puis charger
+            setTimeout(charger_suggestions, 800);
+        }
+        
+        async function generer_nouvelles_ia() {
+            document.getElementById('suggestions-container').innerHTML = 
+                '<div class="loading">🤖 Génération de nouvelles recettes par IA...</div>';
+            recettes_choisies = [];
+            document.getElementById('count-selection').textContent = '0';
+            document.getElementById('btn-valider').disabled = true;
+            
+            try {
+                console.log('🤖 Génération recettes IA...');
+                const response = await fetch('/api/nouvelles-recettes?nombre=4&contexte=nouvelles idées créatives');
+                const nouvelles_recettes = await response.json();
+                console.log('✅ Nouvelles recettes générées:', nouvelles_recettes);
+                
+                // Mélanger avec quelques suggestions existantes
+                const response2 = await fetch('/api/suggestions?nombre=2');
+                const suggestions_classiques = await response2.json();
+                
+                const melange = [...nouvelles_recettes, ...suggestions_classiques];
+                
+                // Mélanger l'ordre
+                for (let i = melange.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [melange[i], melange[j]] = [melange[j], melange[i]];
+                }
+                
+                afficher_suggestions(melange);
+            } catch (error) {
+                console.error('❌ Erreur génération IA:', error);
+                document.getElementById('suggestions-container').innerHTML = 
+                    `<div style="color: red;">Erreur génération IA. <button onclick="charger_suggestions()">Revenir aux suggestions normales</button></div>`;
+            }
         }
         
         async function valider_choix() {
