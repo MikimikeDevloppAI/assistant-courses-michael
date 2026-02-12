@@ -1,0 +1,150 @@
+{
+  "rayons": {
+    "legumes": {
+      "nom": "Fruits & Légumes",
+      "ordre": 1,
+      "produits": {
+        "brocolis": {"nom": "Brocolis frais", "unite": "kg", "prix_moyen": 4.50},
+        "poivrons": {"nom": "Poivrons colorés", "unite": "kg", "prix_moyen": 6.90},
+        "oignons": {"nom": "Oignons", "unite": "kg", "prix_moyen": 2.20},
+        "ail": {"nom": "Ail", "unite": "tête", "prix_moyen": 1.80},
+        "carottes": {"nom": "Carottes", "unite": "kg", "prix_moyen": 2.80},
+        "celeri": {"nom": "Céleri branche", "unite": "botte", "prix_moyen": 3.20},
+        "champignons": {"nom": "Champignons de Paris", "unite": "barquette 250g", "prix_moyen": 2.95}
+      }
+    },
+    "fruits": {
+      "nom": "Fruits",
+      "ordre": 2,
+      "produits": {
+        "citron": {"nom": "Citrons", "unite": "kg", "prix_moyen": 4.50},
+        "avocat": {"nom": "Avocats", "unite": "pièce", "prix_moyen": 1.95}
+      }
+    },
+    "viande": {
+      "nom": "Viande & Poissons",
+      "ordre": 3,
+      "produits": {
+        "filets_poulet": {"nom": "Filets de poulet", "unite": "kg", "prix_moyen": 24.90},
+        "bœuf_hache": {"nom": "Viande hachée de bœuf", "unite": "500g", "prix_moyen": 8.95},
+        "bœuf_bourguignon": {"nom": "Viande à bourguignon", "unite": "kg", "prix_moyen": 32.50}
+      }
+    },
+    "charcuterie": {
+      "nom": "Charcuterie",
+      "ordre": 4,
+      "produits": {
+        "lardons": {"nom": "Lardons fumés", "unite": "150g", "prix_moyen": 3.50}
+      }
+    },
+    "frais": {
+      "nom": "Produits Frais",
+      "ordre": 5,
+      "produits": {
+        "œufs": {"nom": "Œufs de poules élevées au sol", "unite": "6 pièces", "prix_moyen": 4.20},
+        "beurre": {"nom": "Beurre", "unite": "250g", "prix_moyen": 3.80},
+        "creme_fraiche": {"nom": "Crème fraîche", "unite": "200ml", "prix_moyen": 2.40}
+      }
+    },
+    "fromage": {
+      "nom": "Fromages",
+      "ordre": 6,
+      "produits": {
+        "cheddar_rape": {"nom": "Cheddar râpé", "unite": "200g", "prix_moyen": 4.95}
+      }
+    },
+    "feculents": {
+      "nom": "Pâtes, Riz & Féculents",
+      "ordre": 7,
+      "produits": {
+        "pates": {"nom": "Pâtes", "unite": "500g", "prix_moyen": 1.95},
+        "riz": {"nom": "Riz long grain", "unite": "1kg", "prix_moyen": 2.95}
+      }
+    },
+    "conserves": {
+      "nom": "Conserves",
+      "ordre": 8,
+      "produits": {
+        "haricots_rouges": {"nom": "Haricots rouges", "unite": "boîte 400g", "prix_moyen": 1.50},
+        "tomates_concassees": {"nom": "Tomates concassées", "unite": "boîte 400g", "prix_moyen": 1.20},
+        "concentre_tomate": {"nom": "Concentré de tomate", "unite": "tube", "prix_moyen": 1.80}
+      }
+    },
+    "surgeles": {
+      "nom": "Surgelés",
+      "ordre": 9,
+      "produits": {
+        "legumes_surgeles": {"nom": "Mélange de légumes surgelés", "unite": "600g", "prix_moyen": 3.50}
+      }
+    },
+    "pain": {
+      "nom": "Boulangerie",
+      "ordre": 10,
+      "produits": {
+        "tortillas": {"nom": "Tortillas de blé", "unite": "8 pièces", "prix_moyen": 3.20}
+      }
+    },
+    "huiles": {
+      "nom": "Huiles & Vinaigres",
+      "ordre": 11,
+      "produits": {
+        "huile_olive": {"nom": "Huile d'olive", "unite": "500ml", "prix_moyen": 7.50},
+        "huile_sesame": {"nom": "Huile de sésame", "unite": "250ml", "prix_moyen": 4.95}
+      }
+    },
+    "epices": {
+      "nom": "Épices & Condiments",
+      "ordre": 12,
+      "produits": {
+        "sel": {"nom": "Sel fin", "unite": "1kg", "prix_moyen": 0.95},
+        "poivre": {"nom": "Poivre noir moulu", "unite": "50g", "prix_moyen": 2.20},
+        "herbes_provence": {"nom": "Herbes de Provence", "unite": "25g", "prix_moyen": 2.80},
+        "paprika": {"nom": "Paprika doux", "unite": "50g", "prix_moyen": 2.95},
+        "cumin": {"nom": "Cumin moulu", "unite": "50g", "prix_moyen": 3.20},
+        "piment": {"nom": "Piment de Cayenne", "unite": "25g", "prix_moyen": 2.50},
+        "epices_mexicaines": {"nom": "Mélange d'épices mexicaines", "unite": "sachet", "prix_moyen": 1.95}
+      }
+    },
+    "asiatique": {
+      "nom": "Produits Asiatiques",
+      "ordre": 13,
+      "produits": {
+        "sauce_soja": {"nom": "Sauce soja", "unite": "250ml", "prix_moyen": 3.50}
+      }
+    },
+    "herbes": {
+      "nom": "Herbes Fraîches",
+      "ordre": 14,
+      "produits": {
+        "bouquet_garni": {"nom": "Bouquet garni", "unite": "sachet", "prix_moyen": 1.50}
+      }
+    },
+    "farine": {
+      "nom": "Farines & Levures", 
+      "ordre": 15,
+      "produits": {
+        "farine": {"nom": "Farine de blé", "unite": "1kg", "prix_moyen": 1.45}
+      }
+    },
+    "alcools": {
+      "nom": "Vins & Spiritueux",
+      "ordre": 16,
+      "produits": {
+        "vin_rouge": {"nom": "Vin rouge de cuisine", "unite": "750ml", "prix_moyen": 8.50}
+      }
+    }
+  },
+  
+  "stock_base_recommande": [
+    "riz", "pates", "huile_olive", "sel", "poivre", "œufs", 
+    "beurre", "farine", "concentre_tomate", "herbes_provence"
+  ],
+  
+  "produits_longue_conservation": [
+    "riz", "pates", "conserves", "epices", "huiles", "farine"
+  ],
+  
+  "produits_frais": [
+    "legumes", "fruits", "viande", "frais", "fromage", "pain", "herbes"
+  ]
+}

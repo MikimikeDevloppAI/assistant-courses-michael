@@ -1,0 +1,191 @@
+{
+  "recettes_recurrentes": {
+    "riz_saute": {
+      "nom": "Riz Sauté aux Légumes",
+      "difficulte": "facile",
+      "temps_prep": 15,
+      "portions": 4,
+      "frequence": "tres_frequent",
+      "type": "gestion_restes",
+      "ingredients": {
+        "riz_cuit": {"quantite": "300g", "rayon": "stock", "obligatoire": true},
+        "legumes_surgeles": {"quantite": "200g", "rayon": "surgeles", "obligatoire": true},
+        "œufs": {"quantite": 2, "rayon": "frais", "obligatoire": true},
+        "sauce_soja": {"quantite": "2 c.s.", "rayon": "asiatique", "obligatoire": false},
+        "huile_sesame": {"quantite": "1 c.s.", "rayon": "huiles", "obligatoire": false},
+        "oignon": {"quantite": 1, "rayon": "legumes", "obligatoire": false}
+      },
+      "instructions": [
+        "Faire chauffer l'huile dans un wok",
+        "Ajouter l'oignon émincé",
+        "Ajouter les légumes surgelés",
+        "Incorporer le riz cuit",
+        "Battre les œufs et les ajouter",
+        "Assaisonner avec sauce soja"
+      ],
+      "tags": ["rapide", "restes", "asiatique"]
+    },
+    "brocolis_vapeur": {
+      "nom": "Brocolis à la Vapeur",
+      "difficulte": "facile",
+      "temps_prep": 10,
+      "portions": 4,
+      "frequence": "frequent",
+      "type": "legume_accompagnement",
+      "ingredients": {
+        "brocolis": {"quantite": "500g", "rayon": "legumes", "obligatoire": true},
+        "beurre": {"quantite": "20g", "rayon": "frais", "obligatoire": false},
+        "sel": {"quantite": "1 pincée", "rayon": "stock", "obligatoire": true},
+        "poivre": {"quantite": "1 pincée", "rayon": "stock", "obligatoire": true}
+      },
+      "instructions": [
+        "Nettoyer et détailler les brocolis",
+        "Cuire 8-10 min à la vapeur",
+        "Servir avec beurre, sel, poivre"
+      ],
+      "tags": ["sain", "rapide", "vapeur"]
+    },
+    "poulet_marine": {
+      "nom": "Filets de Poulet Marinés",
+      "difficulte": "moyen",
+      "temps_prep": 25,
+      "temps_marinade": 60,
+      "portions": 4,
+      "frequence": "frequent",
+      "type": "plat_principal",
+      "ingredients": {
+        "filets_poulet": {"quantite": "600g", "rayon": "viande", "obligatoire": true},
+        "huile_olive": {"quantite": "3 c.s.", "rayon": "huiles", "obligatoire": true},
+        "citron": {"quantite": 1, "rayon": "fruits", "obligatoire": true},
+        "ail": {"quantite": "3 gousses", "rayon": "legumes", "obligatoire": true},
+        "herbes_provence": {"quantite": "1 c.s.", "rayon": "epices", "obligatoire": false},
+        "paprika": {"quantite": "1 c.c.", "rayon": "epices", "obligatoire": false}
+      },
+      "instructions": [
+        "Mélanger huile, jus de citron, ail haché",
+        "Ajouter herbes et épices",
+        "Faire mariner le poulet 1h minimum",
+        "Cuire à la poêle 6-8 min par face"
+      ],
+      "tags": ["proteine", "marine", "mediterraneen"]
+    },
+    "fajitas": {
+      "nom": "Fajitas au Poulet",
+      "difficulte": "moyen",
+      "temps_prep": 30,
+      "portions": 4,
+      "frequence": "occasionnel",
+      "type": "plat_complet",
+      "ingredients": {
+        "tortillas": {"quantite": 8, "rayon": "pain", "obligatoire": true},
+        "filets_poulet": {"quantite": "500g", "rayon": "viande", "obligatoire": true},
+        "poivrons": {"quantite": 2, "rayon": "legumes", "obligatoire": true},
+        "oignons": {"quantite": 2, "rayon": "legumes", "obligatoire": true},
+        "avocat": {"quantite": 1, "rayon": "fruits", "obligatoire": false},
+        "creme_fraiche": {"quantite": "200ml", "rayon": "frais", "obligatoire": false},
+        "cheddar_rape": {"quantite": "100g", "rayon": "fromage", "obligatoire": false},
+        "epices_mexicaines": {"quantite": "1 sachet", "rayon": "epices", "obligatoire": true}
+      },
+      "instructions": [
+        "Découper poulet en lanières",
+        "Émincer poivrons et oignons",
+        "Faire revenir le poulet avec épices",
+        "Ajouter légumes, cuire 10 min",
+        "Réchauffer tortillas",
+        "Garnir et servir"
+      ],
+      "tags": ["mexicain", "convivial", "complet"]
+    },
+    "chili_con_carne": {
+      "nom": "Chili con Carne",
+      "difficulte": "moyen",
+      "temps_prep": 45,
+      "portions": 6,
+      "frequence": "occasionnel",
+      "type": "plat_mijote",
+      "ingredients": {
+        "bœuf_hache": {"quantite": "500g", "rayon": "viande", "obligatoire": true},
+        "haricots_rouges": {"quantite": "2 boites", "rayon": "conserves", "obligatoire": true},
+        "tomates_concassees": {"quantite": "1 boite", "rayon": "conserves", "obligatoire": true},
+        "oignons": {"quantite": 2, "rayon": "legumes", "obligatoire": true},
+        "ail": {"quantite": "3 gousses", "rayon": "legumes", "obligatoire": true},
+        "concentre_tomate": {"quantite": "2 c.s.", "rayon": "conserves", "obligatoire": true},
+        "cumin": {"quantite": "1 c.c.", "rayon": "epices", "obligatoire": true},
+        "paprika": {"quantite": "1 c.c.", "rayon": "epices", "obligatoire": true},
+        "piment": {"quantite": "1 pincée", "rayon": "epices", "obligatoire": false}
+      },
+      "instructions": [
+        "Faire revenir oignons et ail",
+        "Ajouter la viande hachée",
+        "Incorporer concentré et épices",
+        "Ajouter tomates et haricots",
+        "Laisser mijoter 30 min"
+      ],
+      "tags": ["mijote", "epice", "consistant"]
+    },
+    "bolognese": {
+      "nom": "Sauce Bolognese",
+      "difficulte": "moyen",
+      "temps_prep": 60,
+      "portions": 6,
+      "frequence": "frequent",
+      "type": "sauce",
+      "ingredients": {
+        "bœuf_hache": {"quantite": "400g", "rayon": "viande", "obligatoire": true},
+        "lardons": {"quantite": "100g", "rayon": "charcuterie", "obligatoire": false},
+        "oignons": {"quantite": 1, "rayon": "legumes", "obligatoire": true},
+        "carottes": {"quantite": 1, "rayon": "legumes", "obligatoire": true},
+        "celeri": {"quantite": "1 branche", "rayon": "legumes", "obligatoire": false},
+        "tomates_concassees": {"quantite": "1 boite", "rayon": "conserves", "obligatoire": true},
+        "concentre_tomate": {"quantite": "2 c.s.", "rayon": "conserves", "obligatoire": true},
+        "vin_rouge": {"quantite": "100ml", "rayon": "alcools", "obligatoire": false},
+        "pates": {"quantite": "500g", "rayon": "feculents", "obligatoire": true}
+      },
+      "instructions": [
+        "Faire revenir lardons et oignons",
+        "Ajouter carottes et céleri émincés",
+        "Incorporer la viande hachée",
+        "Déglacer au vin rouge",
+        "Ajouter tomates et concentré",
+        "Laisser mijoter 45 min",
+        "Servir sur pâtes cuites"
+      ],
+      "tags": ["italien", "mijote", "pates"]
+    },
+    "bœuf_bourguignon": {
+      "nom": "Bœuf Bourguignon",
+      "difficulte": "difficile",
+      "temps_prep": 180,
+      "portions": 6,
+      "frequence": "weekend",
+      "type": "plat_weekend",
+      "ingredients": {
+        "bœuf_bourguignon": {"quantite": "1kg", "rayon": "viande", "obligatoire": true},
+        "lardons": {"quantite": "150g", "rayon": "charcuterie", "obligatoire": true},
+        "champignons": {"quantite": "200g", "rayon": "legumes", "obligatoire": true},
+        "carottes": {"quantite": 3, "rayon": "legumes", "obligatoire": true},
+        "oignons": {"quantite": 2, "rayon": "legumes", "obligatoire": true},
+        "ail": {"quantite": "4 gousses", "rayon": "legumes", "obligatoire": true},
+        "vin_rouge": {"quantite": "750ml", "rayon": "alcools", "obligatoire": true},
+        "bouquet_garni": {"quantite": 1, "rayon": "herbes", "obligatoire": true},
+        "farine": {"quantite": "2 c.s.", "rayon": "farine", "obligatoire": true},
+        "beurre": {"quantite": "50g", "rayon": "frais", "obligatoire": true}
+      },
+      "instructions": [
+        "Faire revenir les lardons",
+        "Faire dorer la viande farinée",
+        "Ajouter légumes et ail",
+        "Déglacer au vin rouge",
+        "Ajouter bouquet garni",
+        "Laisser mijoter 2h30"
+      ],
+      "tags": ["weekend", "mijote", "festif", "traditionnel"]
+    }
+  },
+  "categories": {
+    "gestion_restes": ["riz_saute"],
+    "plats_rapides": ["riz_saute", "brocolis_vapeur", "poulet_marine"],
+    "plats_weekend": ["bœuf_bourguignon", "chili_con_carne"],
+    "plats_enfants": ["brocolis_vapeur", "poulet_marine", "bolognese"]
+  }
+}

@@ -1,0 +1,27 @@
+# Assistant Courses - Fichiers à ignorer
+
+# Base de données (données personnelles)
+data/assistant.db
+data/assistant.db-journal
+
+# Logs et cache
+*.log
+*.pyc
+__pycache__/
+.cache/
+
+# Environnement virtuel
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Secrets (si ajoutés plus tard)
+.env
+secrets/
