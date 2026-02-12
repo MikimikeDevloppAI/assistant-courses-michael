@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Assistant Courses - Version Finale</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 15px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        
+        .personnes-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .personnes-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        
+        .btn-round {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-round:hover {
+            background: #5a6fd8;
+            transform: scale(1.1);
+        }
+        
+        .personnes-display {
+            font-size: 2rem;
+            font-weight: bold;
+            min-width: 100px;
+            color: #667eea;
+        }
+        
+        .recettes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .recette-item {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: white;
+        }
+        
+        .recette-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .recette-item.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+        
+        .recette-checkbox {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 25px;
+            height: 25px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .recette-item.selected .recette-checkbox {
+            background: #667eea;
+            color: white;
+        }
+        
+        .recette-nom {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            padding-right: 40px;
+            color: #333;
+        }
+        
+        .recette-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .recette-description {
+            font-size: 0.9rem;
+            color: #777;
+            line-height: 1.3;
+        }
+        
+        .categorie-badge {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .btn-big {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px 35px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-big:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-big:disabled {
+            background: #bbb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .stock-section {
+            margin-top: 25px;
+        }
+        
+        .stock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+        
+        .stock-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .stock-item:hover {
+            background: #e9ecef;
+        }
+        
+        .stock-item.checked {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .stock-toggle {
+            width: 45px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .stock-toggle.active {
+            background: #28a745;
+        }
+        
+        .stock-toggle::after {
+            content: '';
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .stock-toggle.active::after {
+            transform: translateX(20px);
+        }
+        
+        .liste-courses {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .rayon-section {
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+        
+        .rayon-titre {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .article-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .article-item:last-child {
+            border-bottom: none;
+        }
+        
+        .article-nom {
+            font-weight: 500;
+            flex-grow: 1;
+        }
+        
+        .article-quantite {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 3px 8px;
+            border-radius: 8px;
+        }
+        
+        .resume-section {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .btn-export {
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-export:hover {
+            background: #128c7e;
+            transform: translateY(-2px);
+        }
+        
+        .hidden { display: none; }
+        
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .recettes-grid {
+                grid-template-columns: 1fr;
+                max-height: 350px;
+            }
+            .personnes-controls {
+                gap: 15px;
+            }
+            .personnes-display {
+                font-size: 1.8rem;
+                min-width: 80px;
+            }
+            .btn-round {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 Assistant Courses Michael</h1>
+            <p>50 recettes Marmiton • Calcul par personne • Export WhatsApp</p>
+        </div>
+        
+        <!-- Étape 1: Nombre de personnes -->
+        <div class="card">
+            <h2 style="text-align: center; margin-bottom: 20px;">👥 Nombre de Personnes</h2>
+            <div class="personnes-controls">
+                <button class="btn-round" onclick="ajusterPersonnes(-0.5)">−</button>
+                <div class="personnes-display" id="nb-personnes">2.5</div>
+                <button class="btn-round" onclick="ajusterPersonnes(0.5)">+</button>
+            </div>
+            <p style="text-align: center; color: #666; font-size: 0.9rem;">
+                Les quantités seront automatiquement calculées pour ce nombre de personnes
+            </p>
+        </div>
+        
+        <!-- Étape 2: Sélection recettes -->
+        <div class="card">
+            <h2 style="margin-bottom: 20px;">🍽️ Choisis tes Recettes Marmiton</h2>
+            <div class="recettes-grid" id="recettes-container">
+                <div class="loading">Chargement des recettes Marmiton...</div>
+            </div>
+            
+            <button class="btn-big" onclick="genererListeCourses()" disabled id="btn-generer">
+                🛒 Générer ma Liste de Courses (<span id="count-recettes">0</span> recettes)
+            </button>
+        </div>
+        
+        <!-- Étape 3: Vérification stock (cachée) -->
+        <div class="card hidden" id="section-stock">
+            <h2 style="margin-bottom: 15px;">📦 Qu'est-ce que tu as déjà en stock ?</h2>
+            <p style="color: #666; margin-bottom: 20px;">
+                Active les ingrédients que tu as déjà pour les retirer de la liste
+            </p>
+            <div class="stock-grid" id="stock-container">
+                <div class="loading">Analyse des ingrédients nécessaires...</div>
+            </div>
+            
+            <button class="btn-big" onclick="finaliserListe()">
+                ✅ Finaliser ma Liste Coop
+            </button>
+        </div>
+        
+        <!-- Étape 4: Liste finale (cachée) -->
+        <div class="card hidden" id="section-liste">
+            <h2 style="margin-bottom: 15px;">🛒 Ta Liste de Courses Coop</h2>
+            
+            <div class="resume-section" id="resume-section"></div>
+            
+            <div class="liste-courses" id="liste-container">
+                <div class="loading">Génération de ta liste personnalisée...</div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 25px;">
+                <button class="btn-export" onclick="exporterWhatsApp()">
+                    📱 Envoyer à WhatsApp
+                </button>
+                <button class="btn-export" style="background: #007bff;" onclick="copierListe()">
+                    📋 Copier Liste
+                </button>
+            </div>
+            
+            <div id="export-result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let nbPersonnes = 2.5;
+        let recettesDisponibles = [];
+        let recettesSelectionnees = [];
+        let stockDeclare = {};
+        let listeFinale = null;
+        
+        // Chargement initial
+        document.addEventListener('DOMContentLoaded', function() {
+            chargerRecettes();
+        });
+        
+        async function chargerRecettes() {
+            try {
+                const response = await fetch('/api/recettes');
+                const recettes = await response.json();
+                
+                recettesDisponibles = recettes;
+                afficherRecettes(recettes);
+                
+            } catch (error) {
+                console.error('Erreur chargement recettes:', error);
+                document.getElementById('recettes-container').innerHTML = 
+                    '<div style="color: red; text-align: center;">Erreur de chargement. Rafraîchis la page.</div>';
+            }
+        }
+        
+        function afficherRecettes(recettes) {
+            const container = document.getElementById('recettes-container');
+            container.innerHTML = '';
+            
+            // Grouper par catégorie
+            const parCategorie = {};
+            recettes.forEach(recette => {
+                const cat = recette.categorie;
+                if (!parCategorie[cat]) parCategorie[cat] = [];
+                parCategorie[cat].push(recette);
+            });
+            
+            // Afficher toutes les recettes
+            recettes.forEach(recette => {
+                const div = document.createElement('div');
+                div.className = 'recette-item';
+                div.onclick = () => toggleRecette(recette.id, div);
+                
+                const tempsTotal = recette.temps_total;
+                const tempsDisplay = tempsTotal <= 20 ? '⚡ Rapide' : 
+                                   tempsTotal <= 45 ? '🍳 Normal' : '👨‍🍳 Long';
+                
+                div.innerHTML = `
+                    <div class="recette-checkbox"></div>
+                    <div class="categorie-badge">${recette.categorie}</div>
+                    <div class="recette-nom">${recette.nom}</div>
+                    <div class="recette-meta">
+                        <span>${tempsDisplay} (${tempsTotal}min)</span>
+                        <span>📊 ${recette.difficulte}</span>
+                        <span>👥 ${recette.portions} pers.</span>
+                    </div>
+                    <div class="recette-description">${recette.description}</div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+        
+        function toggleRecette(recetteId, element) {
+            if (recettesSelectionnees.includes(recetteId)) {
+                recettesSelectionnees = recettesSelectionnees.filter(id => id !== recetteId);
+                element.classList.remove('selected');
+                element.querySelector('.recette-checkbox').innerHTML = '';
+            } else {
+                recettesSelectionnees.push(recetteId);
+                element.classList.add('selected');
+                element.querySelector('.recette-checkbox').innerHTML = '✓';
+            }
+            
+            // Mettre à jour le bouton
+            const count = document.getElementById('count-recettes');
+            const btn = document.getElementById('btn-generer');
+            count.textContent = recettesSelectionnees.length;
+            btn.disabled = recettesSelectionnees.length === 0;
+        }
+        
+        function ajusterPersonnes(delta) {
+            nbPersonnes = Math.max(1, nbPersonnes + delta);
+            document.getElementById('nb-personnes').textContent = nbPersonnes;
+        }
+        
+        async function genererListeCourses() {
+            // Cacher étape recettes, montrer étape stock
+            document.querySelector('.card:nth-child(3)').classList.add('hidden');
+            document.getElementById('section-stock').classList.remove('hidden');
+            
+            // Générer la liste des ingrédients nécessaires
+            await chargerIngredientsStock();
+        }
+        
+        async function chargerIngredientsStock() {
+            try {
+                // Récupérer tous les ingrédients des recettes sélectionnées
+                const ingredientsUniques = new Set();
+                
+                for (const recetteId of recettesSelectionnees) {
+                    const response = await fetch(`/api/ingredients/${recetteId}?personnes=${nbPersonnes}`);
+                    const data = await response.json();
+                    
+                    data.ingredients.forEach(ing => {
+                        ingredientsUniques.add(ing.nom);
+                    });
+                }
+                
+                // Afficher les ingrédients pour vérification stock
+                const container = document.getElementById('stock-container');
+                container.innerHTML = '';
+                
+                Array.from(ingredientsUniques).sort().forEach(ingredient => {
+                    const div = document.createElement('div');
+                    div.className = 'stock-item';
+                    div.onclick = () => toggleStock(ingredient, div);
+                    
+                    div.innerHTML = `
+                        <span>${ingredient}</span>
+                        <div class="stock-toggle" id="toggle-${ingredient.replace(/[^a-zA-Z0-9]/g, '_')}"></div>
+                    `;
+                    
+                    container.appendChild(div);
+                });
+                
+            } catch (error) {
+                console.error('Erreur chargement ingrédients:', error);
+            }
+        }
+        
+        function toggleStock(ingredient, element) {
+            const toggle = element.querySelector('.stock-toggle');
+            
+            if (stockDeclare[ingredient]) {
+                delete stockDeclare[ingredient];
+                toggle.classList.remove('active');
+                element.classList.remove('checked');
+            } else {
+                stockDeclare[ingredient] = true;
+                toggle.classList.add('active');
+                element.classList.add('checked');
+            }
+        }
+        
+        async function finaliserListe() {
+            // Cacher étape stock, montrer liste finale
+            document.getElementById('section-stock').classList.add('hidden');
+            document.getElementById('section-liste').classList.remove('hidden');
+            
+            // Générer la liste finale
+            await genererListeFinale();
+        }
+        
+        async function genererListeFinale() {
+            try {
+                const response = await fetch('/api/liste-courses-finale', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        recettes: recettesSelectionnees,
+                        personnes: nbPersonnes,
+                        stock: stockDeclare
+                    })
+                });
+                
+                const data = await response.json();
+                listeFinale = data;
+                
+                // Afficher le résumé
+                const resumeEl = document.getElementById('resume-section');
+                resumeEl.innerHTML = `
+                    <h3>🎯 Résumé de tes Courses</h3>
+                    <p><strong>${data.recettes.join(', ')}</strong></p>
+                    <p>👥 ${data.nb_personnes} personnes • 📦 ${data.total_articles} articles</p>
+                `;
+                
+                // Afficher la liste par rayons
+                const container = document.getElementById('liste-container');
+                container.innerHTML = '';
+                
+                Object.entries(data.liste_par_rayon).forEach(([rayon, articles]) => {
+                    const rayonDiv = document.createElement('div');
+                    rayonDiv.className = 'rayon-section';
+                    
+                    rayonDiv.innerHTML = `
+                        <div class="rayon-titre">
+                            ${getRayonIcon(rayon)} ${rayon}
+                        </div>
+                    `;
+                    
+                    articles.forEach(article => {
+                        const articleDiv = document.createElement('div');
+                        articleDiv.className = 'article-item';
+                        articleDiv.innerHTML = `
+                            <span class="article-nom">${article.nom}</span>
+                            <span class="article-quantite">${article.quantite}</span>
+                        `;
+                        rayonDiv.appendChild(articleDiv);
+                    });
+                    
+                    container.appendChild(rayonDiv);
+                });
+                
+            } catch (error) {
+                console.error('Erreur génération liste:', error);
+            }
+        }
+        
+        function getRayonIcon(rayon) {
+            const icons = {
+                'Légumes': '🥬', 'Fruits': '🍎', 'Viande': '🍖', 'Poisson': '🐟',
+                'Charcuterie': '🥓', 'Frais': '🧈', 'Fromage': '🧀', 'Pâtes': '🍝',
+                'Épicerie': '🛒', 'Surgelés': '❄️', 'Boulangerie': '🥖',
+                'Pâtisserie': '🧁', 'Huiles': '🫒', 'Épices': '🌶️',
+                'Herbes': '🌿', 'Conserves': '🥫', 'Alcools': '🍷'
+            };
+            return icons[rayon] || '📦';
+        }
+        
+        async function exporterWhatsApp() {
+            if (!listeFinale) return;
+            
+            try {
+                const response = await fetch('/api/export-whatsapp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(listeFinale)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Ouvrir WhatsApp avec le message
+                    const encodedMessage = encodeURIComponent(data.message);
+                    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+                    window.open(whatsappUrl, '_blank');
+                    
+                    // Afficher confirmation
+                    document.getElementById('export-result').innerHTML = 
+                        '<div class="success-message">📱 Message préparé pour WhatsApp !</div>';
+                    document.getElementById('export-result').style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Erreur export WhatsApp:', error);
+            }
+        }
+        
+        async function copierListe() {
+            if (!listeFinale) return;
+            
+            try {
+                const response = await fetch('/api/export-whatsapp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(listeFinale)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    await navigator.clipboard.writeText(data.message);
+                    
+                    document.getElementById('export-result').innerHTML = 
+                        '<div class="success-message">📋 Liste copiée ! Tu peux la coller dans WhatsApp ou SMS</div>';
+                    document.getElementById('export-result').style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Erreur copie:', error);
+                // Fallback pour anciens navigateurs
+                const textarea = document.createElement('textarea');
+                textarea.value = data.message;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+        }
+    </script>
+</body>
+</html>

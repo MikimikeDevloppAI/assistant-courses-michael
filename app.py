@@ -437,11 +437,25 @@ assistant = AssistantCourses()
 # Routes Flask
 @app.route('/')
 def index():
+    # Redirection vers la version finale
+    from flask import redirect
+    return redirect('http://69.62.121.46:5001/')
+
+@app.route('/simple')
+def simple():
     return render_template('simple.html')
 
 @app.route('/advanced')
 def advanced():
     return render_template('index.html')
+
+@app.route('/backup')
+def backup():
+    return render_template('backup_statique.html')
+
+@app.route('/test')
+def test():
+    return render_template('ultra_simple.html')
 
 @app.route('/api/suggestions')
 def get_suggestions():

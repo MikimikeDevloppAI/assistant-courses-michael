@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Assistant Courses - Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .debug {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .personnes-section {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .personnes-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .personnes-count {
+            font-size: 24px;
+            font-weight: bold;
+            min-width: 60px;
+        }
+        
+        .recette-item {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .recette-item:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .recette-item.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .recette-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+        
+        .recette-item.selected .recette-checkbox {
+            background: #667eea;
+            color: white;
+        }
+        
+        .recette-info {
+            flex-grow: 1;
+        }
+        
+        .recette-nom {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .recette-meta {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .btn-big {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .btn-big:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-big:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .result {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Assistant Courses - Test Simple</h1>
+        
+        <div class="debug" id="debug-log">
+            📝 Debug Log:<br>
+            ✅ Page chargée<br>
+        </div>
+        
+        <!-- Section personnes -->
+        <div class="personnes-section">
+            <h2>👥 Nombre de Personnes</h2>
+            <div class="personnes-controls">
+                <button class="btn" onclick="ajusterPersonnes(-0.5)">−0.5</button>
+                <div class="personnes-count" id="nb-personnes">2.5</div>
+                <button class="btn" onclick="ajusterPersonnes(0.5)">+0.5</button>
+            </div>
+        </div>
+        
+        <!-- Section recettes -->
+        <div>
+            <h2>🍽️ Tes Recettes (Sélectionne tes favoris)</h2>
+            
+            <div class="recette-item" onclick="toggleRecette('riz_saute', this)">
+                <div class="recette-checkbox"></div>
+                <div class="recette-info">
+                    <div class="recette-nom">🍚 Riz Sauté aux Légumes</div>
+                    <div class="recette-meta">15 min • Facile • Asiatique</div>
+                </div>
+            </div>
+            
+            <div class="recette-item" onclick="toggleRecette('pates_carbo', this)">
+                <div class="recette-checkbox"></div>
+                <div class="recette-info">
+                    <div class="recette-nom">🍝 Pâtes Carbonara</div>
+                    <div class="recette-meta">20 min • Facile • Italien</div>
+                </div>
+            </div>
+            
+            <div class="recette-item" onclick="toggleRecette('poulet_grille', this)">
+                <div class="recette-checkbox"></div>
+                <div class="recette-info">
+                    <div class="recette-nom">🍗 Poulet Grillé + Légumes</div>
+                    <div class="recette-meta">25 min • Facile • Français</div>
+                </div>
+            </div>
+            
+            <div class="recette-item" onclick="toggleRecette('salade_cesar', this)">
+                <div class="recette-checkbox"></div>
+                <div class="recette-info">
+                    <div class="recette-nom">🥗 Salade César</div>
+                    <div class="recette-meta">10 min • Facile • Fusion</div>
+                </div>
+            </div>
+            
+            <div class="recette-item" onclick="toggleRecette('omelette', this)">
+                <div class="recette-checkbox"></div>
+                <div class="recette-info">
+                    <div class="recette-nom">🥚 Omelette aux Herbes</div>
+                    <div class="recette-meta">10 min • Facile • Français</div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn-big" onclick="genererCourses()" disabled id="btn-courses">
+            🛒 Générer ma Liste de Courses (<span id="count">0</span> recettes)
+        </button>
+        
+        <div id="result" style="display: none;">
+            <div class="result">
+                <h3>✅ Test Réussi !</h3>
+                <p>Recettes sélectionnées : <span id="selected-list"></span></p>
+                <p>Personnes : <span id="personnes-result"></span></p>
+                <p>L'interface fonctionne parfaitement !</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 JavaScript démarré');
+        
+        let nbPersonnes = 2.5;
+        let recettesSelectionnees = [];
+        
+        function addDebugLog(message) {
+            const log = document.getElementById('debug-log');
+            log.innerHTML += '✅ ' + message + '<br>';
+            console.log('DEBUG: ' + message);
+        }
+        
+        addDebugLog('JavaScript initialisé');
+        
+        function ajusterPersonnes(delta) {
+            nbPersonnes = Math.max(1, nbPersonnes + delta);
+            document.getElementById('nb-personnes').textContent = nbPersonnes;
+            addDebugLog('Personnes ajustées: ' + nbPersonnes);
+        }
+        
+        function toggleRecette(recetteId, element) {
+            addDebugLog('Clic sur recette: ' + recetteId);
+            
+            if (recettesSelectionnees.includes(recetteId)) {
+                // Désélectionner
+                recettesSelectionnees = recettesSelectionnees.filter(id => id !== recetteId);
+                element.classList.remove('selected');
+                element.querySelector('.recette-checkbox').innerHTML = '';
+                addDebugLog('Recette désélectionnée: ' + recetteId);
+            } else {
+                // Sélectionner
+                recettesSelectionnees.push(recetteId);
+                element.classList.add('selected');
+                element.querySelector('.recette-checkbox').innerHTML = '✓';
+                addDebugLog('Recette sélectionnée: ' + recetteId);
+            }
+            
+            // Mettre à jour le bouton
+            const count = document.getElementById('count');
+            const btn = document.getElementById('btn-courses');
+            count.textContent = recettesSelectionnees.length;
+            btn.disabled = recettesSelectionnees.length === 0;
+            
+            addDebugLog('Total sélectionnées: ' + recettesSelectionnees.length);
+        }
+        
+        function genererCourses() {
+            addDebugLog('Génération courses démarrée');
+            
+            // Afficher le résultat
+            document.getElementById('selected-list').textContent = recettesSelectionnees.join(', ');
+            document.getElementById('personnes-result').textContent = nbPersonnes;
+            document.getElementById('result').style.display = 'block';
+            
+            // Test API
+            testAPI();
+            
+            addDebugLog('Interface test complétée');
+        }
+        
+        async function testAPI() {
+            try {
+                addDebugLog('Test API démarré...');
+                
+                const response = await fetch('/api/simple-courses', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        recettes: recettesSelectionnees,
+                        personnes: nbPersonnes,
+                        stock: {}
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addDebugLog('API OK - Total: CHF ' + data.total_estime);
+                } else {
+                    addDebugLog('API Erreur: ' + response.status);
+                }
+                
+            } catch (error) {
+                addDebugLog('API Exception: ' + error.message);
+            }
+        }
+        
+        addDebugLog('Toutes les fonctions chargées');
+        console.log('🎯 Interface prête !');
+    </script>
+</body>
+</html>

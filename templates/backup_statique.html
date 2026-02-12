@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Courses - Sans JS</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin: 30px 0;
+        }
+        
+        .section h2 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        .personnes {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .recettes-grid {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .recette-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .recette-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .recette-nom {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .recette-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .liste-exemple {
+            background: #e8f5e8;
+            border: 1px solid #c3e6cb;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .rayon {
+            margin: 15px 0;
+        }
+        
+        .rayon-titre {
+            font-weight: bold;
+            color: #28a745;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .produit {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+        
+        .total {
+            background: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #0c5460;
+        }
+        
+        .emoji {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Assistant Courses Michael</h1>
+        
+        <div class="info">
+            <strong>📱 Version sans JavaScript</strong><br>
+            Cette version fonctionne même si JS est désactivé sur ton téléphone !
+        </div>
+        
+        <div class="section">
+            <h2>👥 Ta Famille</h2>
+            <div class="personnes">
+                <span class="emoji">👨‍👩‍👧‍👦</span>
+                <strong>2.5 personnes</strong> (2 adultes + enfants)
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🍽️ Tes Recettes Favorites</h2>
+            <div class="recettes-grid">
+                <div class="recette-card">
+                    <div class="recette-nom">🍚 Riz Sauté aux Légumes</div>
+                    <div class="recette-meta">15 min • Facile • Parfait avec restes</div>
+                </div>
+                
+                <div class="recette-card">
+                    <div class="recette-nom">🍝 Pâtes Carbonara</div>
+                    <div class="recette-meta">20 min • Facile • Classique italien</div>
+                </div>
+                
+                <div class="recette-card">
+                    <div class="recette-nom">🍗 Poulet Grillé + Légumes</div>
+                    <div class="recette-meta">25 min • Facile • Équilibré</div>
+                </div>
+                
+                <div class="recette-card">
+                    <div class="recette-nom">🥗 Salade César</div>
+                    <div class="recette-meta">10 min • Facile • Frais et rapide</div>
+                </div>
+                
+                <div class="recette-card">
+                    <div class="recette-nom">🥚 Omelette aux Herbes</div>
+                    <div class="recette-meta">10 min • Facile • Petit déj ou dîner</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🛒 Exemple Liste de Courses Coop</h2>
+            <div class="liste-exemple">
+                <div class="rayon">
+                    <div class="rayon-titre">🥬 Fruits & Légumes</div>
+                    <div class="produit">
+                        <span>Courgettes</span>
+                        <span><strong>CHF 2.80</strong></span>
+                    </div>
+                    <div class="produit">
+                        <span>Tomates</span>
+                        <span><strong>CHF 3.50</strong></span>
+                    </div>
+                    <div class="produit">
+                        <span>Salade romaine</span>
+                        <span><strong>CHF 2.20</strong></span>
+                    </div>
+                </div>
+                
+                <div class="rayon">
+                    <div class="rayon-titre">🍖 Viande & Poissons</div>
+                    <div class="produit">
+                        <span>Filets de poulet (600g)</span>
+                        <span><strong>CHF 15.90</strong></span>
+                    </div>
+                </div>
+                
+                <div class="rayon">
+                    <div class="rayon-titre">🧀 Produits Frais</div>
+                    <div class="produit">
+                        <span>Œufs (6 pièces)</span>
+                        <span><strong>CHF 4.20</strong></span>
+                    </div>
+                    <div class="produit">
+                        <span>Crème fraîche</span>
+                        <span><strong>CHF 2.40</strong></span>
+                    </div>
+                    <div class="produit">
+                        <span>Parmesan râpé</span>
+                        <span><strong>CHF 4.95</strong></span>
+                    </div>
+                </div>
+                
+                <div class="rayon">
+                    <div class="rayon-titre">🛒 Épicerie</div>
+                    <div class="produit">
+                        <span>Pâtes spaghetti</span>
+                        <span><strong>CHF 1.95</strong></span>
+                    </div>
+                    <div class="produit">
+                        <span>Sauce soja</span>
+                        <span><strong>CHF 3.50</strong></span>
+                    </div>
+                </div>
+                
+                <div class="total">
+                    💰 Total Estimé: CHF 41.40
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📱 Comment utiliser</h2>
+            <div class="info">
+                <strong>Pour l'instant :</strong> Screenshot cette liste exemple pour tes courses !<br><br>
+                <strong>Bientôt :</strong> Version interactive dès que le problème JavaScript sera résolu.
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🔧 Versions disponibles</h2>
+            <div class="info">
+                • <strong>Version Test :</strong> http://69.62.121.46:5000 (debug JS)<br>
+                • <strong>Version Simple :</strong> http://69.62.121.46:5000/simple<br>
+                • <strong>Version Avancée :</strong> http://69.62.121.46:5000/advanced<br>
+                • <strong>Cette version :</strong> Fonctionne toujours !
+            </div>
+        </div>
+    </div>
+</body>
+</html>
