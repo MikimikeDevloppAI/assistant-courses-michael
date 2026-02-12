@@ -437,6 +437,10 @@ assistant = AssistantCourses()
 # Routes Flask
 @app.route('/')
 def index():
+    return render_template('simple.html')
+
+@app.route('/advanced')
+def advanced():
     return render_template('index.html')
 
 @app.route('/api/suggestions')
@@ -554,6 +558,117 @@ def get_historique():
         })
     conn.close()
     return jsonify(historique)
+
+@app.route('/api/simple-courses', methods=['POST'])
+def generer_courses_simples():
+    """API simplifiée pour l'interface simple"""
+    data = request.json
+    recettes_ids = data.get('recettes', [])
+    nb_personnes = data.get('personnes', 2.5)
+    stock_utilisateur = data.get('stock', {})
+    
+    # Mapping recettes simples vers ingrédients
+    ingredients_par_recette = {
+        'riz_saute': {
+            'Riz long grain': {'quantite': '200g', 'rayon': 'Épicerie'},
+            'Légumes surgelés': {'quantite': '300g', 'rayon': 'Surgelés'},
+            'Œufs': {'quantite': '4 pièces', 'rayon': 'Produits Frais'},
+            'Sauce soja': {'quantite': '1 bouteille', 'rayon': 'Épicerie Asiatique'}
+        },
+        'pates_carbo': {
+            'Pâtes (spaghetti)': {'quantite': '400g', 'rayon': 'Épicerie'},
+            'Lardons': {'quantite': '150g', 'rayon': 'Charcuterie'},
+            'Crème fraîche': {'quantite': '200ml', 'rayon': 'Produits Frais'},
+            'Parmesan râpé': {'quantite': '100g', 'rayon': 'Fromages'}
+        },
+        'poulet_grille': {
+            'Filets de poulet': {'quantite': f'{int(150 * nb_personnes)}g', 'rayon': 'Viande & Poissons'},
+            'Courgettes': {'quantite': '2 pièces', 'rayon': 'Fruits & Légumes'},
+            'Tomates': {'quantite': '500g', 'rayon': 'Fruits & Légumes'},
+            'Herbes de Provence': {'quantite': '1 sachet', 'rayon': 'Épices'}
+        },
+        'salade_cesar': {
+            'Salade romaine': {'quantite': '1 pièce', 'rayon': 'Fruits & Légumes'},
+            'Filets de poulet': {'quantite': '300g', 'rayon': 'Viande & Poissons'},
+            'Croûtons': {'quantite': '1 sachet', 'rayon': 'Épicerie'},
+            'Sauce César': {'quantite': '1 bouteille', 'rayon': 'Épicerie'}
+        },
+        'omelette': {
+            'Œufs': {'quantite': f'{int(3 * nb_personnes)} pièces', 'rayon': 'Produits Frais'},
+            'Herbes fraîches': {'quantite': '1 bouquet', 'rayon': 'Fruits & Légumes'},
+            'Beurre': {'quantite': '250g', 'rayon': 'Produits Frais'}
+        },
+        'spaghetti_bolo': {
+            'Pâtes (spaghetti)': {'quantite': '500g', 'rayon': 'Épicerie'},
+            'Viande hachée': {'quantite': '400g', 'rayon': 'Viande & Poissons'},
+            'Tomates concassées': {'quantite': '2 boîtes', 'rayon': 'Conserves'},
+            'Oignons': {'quantite': '2 pièces', 'rayon': 'Fruits & Légumes'},
+            'Carottes': {'quantite': '2 pièces', 'rayon': 'Fruits & Légumes'}
+        },
+        'curry_poulet': {
+            'Filets de poulet': {'quantite': '500g', 'rayon': 'Viande & Poissons'},
+            'Lait de coco': {'quantite': '1 boîte', 'rayon': 'Épicerie Exotique'},
+            'Pâte de curry': {'quantite': '1 pot', 'rayon': 'Épices'},
+            'Riz basmati': {'quantite': '300g', 'rayon': 'Épicerie'}
+        },
+        'ratatouille': {
+            'Aubergines': {'quantite': '2 pièces', 'rayon': 'Fruits & Légumes'},
+            'Courgettes': {'quantite': '3 pièces', 'rayon': 'Fruits & Légumes'},
+            'Tomates': {'quantite': '1kg', 'rayon': 'Fruits & Légumes'},
+            'Poivrons': {'quantite': '2 pièces', 'rayon': 'Fruits & Légumes'}
+        }
+    }
+    
+    # Collecter tous les ingrédients
+    tous_ingredients = {}
+    for recette_id in recettes_ids:
+        if recette_id in ingredients_par_recette:
+            for ingredient, details in ingredients_par_recette[recette_id].items():
+                if ingredient not in tous_ingredients:
+                    tous_ingredients[ingredient] = details
+    
+    # Filtrer selon le stock déclaré
+    courses_par_rayon = {}
+    total_prix = 0
+    
+    # Prix estimés Coop
+    prix_produits = {
+        'Riz long grain': 2.95, 'Légumes surgelés': 3.50, 'Œufs': 4.20,
+        'Sauce soja': 3.50, 'Pâtes (spaghetti)': 1.95, 'Lardons': 3.50,
+        'Crème fraîche': 2.40, 'Parmesan râpé': 4.95, 'Filets de poulet': 24.90,
+        'Courgettes': 2.80, 'Tomates': 3.50, 'Herbes de Provence': 2.80,
+        'Salade romaine': 2.20, 'Croûtons': 2.50, 'Sauce César': 3.80,
+        'Herbes fraîches': 2.50, 'Beurre': 3.80, 'Viande hachée': 8.95,
+        'Tomates concassées': 1.20, 'Oignons': 2.20, 'Carottes': 2.80,
+        'Lait de coco': 2.95, 'Pâte de curry': 3.50, 'Riz basmati': 3.50,
+        'Aubergines': 4.50, 'Poivrons': 6.90
+    }
+    
+    for ingredient, details in tous_ingredients.items():
+        # Vérifier si en stock
+        if stock_utilisateur.get(ingredient, False):
+            continue  # Skip si en stock
+            
+        rayon = details['rayon']
+        if rayon not in courses_par_rayon:
+            courses_par_rayon[rayon] = []
+            
+        prix = prix_produits.get(ingredient, 3.00)  # Prix par défaut
+        total_prix += prix
+        
+        courses_par_rayon[rayon].append({
+            'nom': ingredient,
+            'quantite': details['quantite'],
+            'prix': prix
+        })
+    
+    return jsonify({
+        'courses_par_rayon': courses_par_rayon,
+        'total_estime': round(total_prix, 2),
+        'nb_articles': sum(len(items) for items in courses_par_rayon.values()),
+        'recettes': recettes_ids,
+        'personnes': nb_personnes
+    })
 
 if __name__ == '__main__':
     # Créer le dossier data si nécessaire

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Assistant Courses - Simple</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            padding: 20px 10px;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .personnes-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .personnes-selector button {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .personnes-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .recettes-list {
+            margin: 20px 0;
+        }
+        
+        .recette-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .recette-item:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .recette-item.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .recette-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #667eea;
+            border-radius: 4px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .recette-item.selected .recette-checkbox {
+            background: #667eea;
+            color: white;
+        }
+        
+        .recette-info {
+            flex-grow: 1;
+        }
+        
+        .recette-nom {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .recette-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .button-big {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .button-big:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .button-big:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .liste-courses {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .rayon-courses {
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+        
+        .rayon-titre {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .produit-course {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .produit-course:last-child {
+            border-bottom: none;
+        }
+        
+        .produit-nom {
+            font-weight: 500;
+        }
+        
+        .produit-quantite {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .produit-prix {
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .total-courses {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .hidden { display: none; }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .stock-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stock-toggle {
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .stock-toggle.active {
+            background: #28a745;
+        }
+        
+        .stock-toggle::after {
+            content: '';
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .stock-toggle.active::after {
+            transform: translateX(25px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🛒 Assistant Courses</h1>
+            <p>Simple et rapide pour ta famille</p>
+        </div>
+        
+        <!-- Étape 1: Choix recettes + personnes -->
+        <div class="card" id="etape-recettes">
+            <h2>👥 Nombre de Personnes</h2>
+            <div class="personnes-selector">
+                <button onclick="ajuster_personnes(-0.5)">−</button>
+                <div class="personnes-count" id="nb-personnes">2.5</div>
+                <button onclick="ajuster_personnes(0.5)">+</button>
+            </div>
+            
+            <h2>🍽️ Tes Recettes Favorites</h2>
+            <div class="recettes-list" id="recettes-container">
+                <div class="loading">Chargement des recettes...</div>
+            </div>
+            
+            <button class="button-big" onclick="generer_courses()" disabled id="btn-courses">
+                🛒 Générer ma Liste de Courses (<span id="count-recettes">0</span>)
+            </button>
+        </div>
+        
+        <!-- Étape 2: Vérification stock (cachée) -->
+        <div class="card hidden" id="etape-stock">
+            <h2>📦 Vérification Stock</h2>
+            <p style="color: #666; margin-bottom: 15px;">Coche ce que tu as déjà en stock</p>
+            <div id="stock-container">
+                <div class="loading">Analyse des ingrédients...</div>
+            </div>
+            <button class="button-big" onclick="finaliser_liste()">✅ Finaliser ma Liste Coop</button>
+        </div>
+        
+        <!-- Étape 3: Liste finale (cachée) -->
+        <div class="card hidden" id="etape-liste">
+            <h2>🛒 Ta Liste Coop</h2>
+            <p style="color: #666; margin-bottom: 15px;">Organisée par rayons du magasin</p>
+            <div id="liste-finale-container">
+                <div class="loading">Génération de ta liste...</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Variables globales
+        let nb_personnes = 2.5;
+        let recettes_selectionnees = [];
+        let stock_declare = {};
+        let recettes_disponibles = [];
+        
+        // Chargement initial
+        document.addEventListener('DOMContentLoaded', function() {
+            charger_recettes_simples();
+        });
+        
+        // Recettes hardcodées pour simplifier
+        const recettes_base = [
+            { id: 'riz_saute', nom: 'Riz Sauté aux Légumes', temps: 15, difficulte: 'facile' },
+            { id: 'pates_carbo', nom: 'Pâtes Carbonara', temps: 20, difficulte: 'facile' },
+            { id: 'poulet_grille', nom: 'Poulet Grillé + Légumes', temps: 25, difficulte: 'facile' },
+            { id: 'salade_cesar', nom: 'Salade César', temps: 10, difficulte: 'facile' },
+            { id: 'omelette', nom: 'Omelette aux Herbes', temps: 10, difficulte: 'facile' },
+            { id: 'spaghetti_bolo', nom: 'Spaghetti Bolognese', temps: 30, difficulte: 'moyen' },
+            { id: 'curry_poulet', nom: 'Curry de Poulet', temps: 35, difficulte: 'moyen' },
+            { id: 'ratatouille', nom: 'Ratatouille', temps: 40, difficulte: 'moyen' }
+        ];
+        
+        function charger_recettes_simples() {
+            const container = document.getElementById('recettes-container');
+            container.innerHTML = '';
+            
+            recettes_base.forEach(recette => {
+                const item = document.createElement('div');
+                item.className = 'recette-item';
+                item.onclick = () => toggle_recette(recette.id, item);
+                
+                item.innerHTML = `
+                    <div class="recette-checkbox"></div>
+                    <div class="recette-info">
+                        <div class="recette-nom">${recette.nom}</div>
+                        <div class="recette-meta">${recette.temps}min • ${recette.difficulte}</div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+            
+            recettes_disponibles = recettes_base;
+        }
+        
+        function toggle_recette(recette_id, element) {
+            if (recettes_selectionnees.includes(recette_id)) {
+                recettes_selectionnees = recettes_selectionnees.filter(id => id !== recette_id);
+                element.classList.remove('selected');
+                element.querySelector('.recette-checkbox').innerHTML = '';
+            } else {
+                recettes_selectionnees.push(recette_id);
+                element.classList.add('selected');
+                element.querySelector('.recette-checkbox').innerHTML = '✓';
+            }
+            
+            // Mettre à jour le bouton
+            const count = document.getElementById('count-recettes');
+            const btn = document.getElementById('btn-courses');
+            count.textContent = recettes_selectionnees.length;
+            btn.disabled = recettes_selectionnees.length === 0;
+        }
+        
+        function ajuster_personnes(delta) {
+            nb_personnes = Math.max(1, nb_personnes + delta);
+            document.getElementById('nb-personnes').textContent = nb_personnes;
+        }
+        
+        async function generer_courses() {
+            // Cacher étape 1, montrer étape 2
+            document.getElementById('etape-recettes').classList.add('hidden');
+            document.getElementById('etape-stock').classList.remove('hidden');
+            
+            // Génération dynamique du stock à vérifier
+            setTimeout(() => {
+                afficher_verification_stock();
+            }, 800);
+        }
+        
+        function afficher_verification_stock() {
+            // Stock de base pré-configuré
+            const stock_base = [
+                'Riz long grain',
+                'Pâtes (spaghetti)',
+                'Huile d\\'olive',
+                'Sel & Poivre',
+                'Œufs',
+                'Beurre',
+                'Oignons',
+                'Ail'
+            ];
+            
+            const container = document.getElementById('stock-container');
+            container.innerHTML = '';
+            
+            stock_base.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'stock-item';
+                div.innerHTML = `
+                    <span>${item}</span>
+                    <div class="stock-toggle active" onclick="toggle_stock('${item}', this)"></div>
+                `;
+                container.appendChild(div);
+                
+                // Marquer comme en stock par défaut
+                stock_declare[item] = true;
+            });
+        }
+        
+        function toggle_stock(item, element) {
+            stock_declare[item] = !stock_declare[item];
+            element.classList.toggle('active');
+        }
+        
+        async function finaliser_liste() {
+            // Cacher étape 2, montrer étape 3
+            document.getElementById('etape-stock').classList.add('hidden');
+            document.getElementById('etape-liste').classList.remove('hidden');
+            
+            // Générer la vraie liste via l'API
+            try {
+                const response = await fetch('/api/simple-courses', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        recettes: recettes_selectionnees,
+                        personnes: nb_personnes,
+                        stock: stock_declare
+                    })
+                });
+                
+                const data = await response.json();
+                afficher_liste_finale(data);
+                
+            } catch (error) {
+                console.error('Erreur génération liste:', error);
+                // Fallback
+                generer_liste_finale_fallback();
+            }
+        }
+        
+        function afficher_liste_finale(data) {
+            const container = document.getElementById('liste-finale-container');
+            container.innerHTML = '';
+            
+            // Afficher chaque rayon
+            Object.entries(data.courses_par_rayon).forEach(([rayon, produits]) => {
+                const rayonDiv = document.createElement('div');
+                rayonDiv.className = 'rayon-courses';
+                rayonDiv.innerHTML = `<div class="rayon-titre">${rayon}</div>`;
+                
+                produits.forEach(produit => {
+                    const produitDiv = document.createElement('div');
+                    produitDiv.className = 'produit-course';
+                    produitDiv.innerHTML = `
+                        <div>
+                            <div class="produit-nom">${produit.nom}</div>
+                            <div class="produit-quantite">${produit.quantite}</div>
+                        </div>
+                        <div class="produit-prix">CHF ${produit.prix.toFixed(2)}</div>
+                    `;
+                    rayonDiv.appendChild(produitDiv);
+                });
+                
+                container.appendChild(rayonDiv);
+            });
+            
+            // Total
+            const totalDiv = document.createElement('div');
+            totalDiv.className = 'total-courses';
+            totalDiv.innerHTML = `
+                <h3>💰 Total Estimé: CHF ${data.total_estime}</h3>
+                <p>${data.recettes.length} recettes pour ${data.personnes} personnes</p>
+                <p>${data.nb_articles} articles à acheter chez Coop</p>
+                <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.9;">
+                    📱 Screenshot cette liste pour tes courses !
+                </p>
+            `;
+            container.appendChild(totalDiv);
+        }
+        
+        function generer_liste_finale_fallback() {
+            // Version de secours si API échoue
+            const container = document.getElementById('liste-finale-container');
+            container.innerHTML = `
+                <div style="text-align: center; color: #666; padding: 20px;">
+                    <h3>⚠️ Génération en cours...</h3>
+                    <p>Utilise tes recettes sélectionnées pour faire tes courses</p>
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <strong>Recettes choisies :</strong><br>
+                        ${recettes_selectionnees.map(id => {
+                            const recette = recettes_disponibles.find(r => r.id === id);
+                            return recette ? recette.nom : id;
+                        }).join('<br>')}
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
